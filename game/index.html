@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emberwild — A Lanternkeeper's Last Garden</title>
+<meta name="description" content="Emberwild: defend a glowing night garden against the gloom. Survive 10 waves, choose boons, and fell the Hollow Moth.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main id="game-shell">
+  <canvas id="game-canvas" width="1280" height="720" aria-label="Emberwild game canvas"></canvas>
+
+  <section id="screen-title" class="screen visible" aria-hidden="false">
+    <div class="title-inner">
+      <p class="eyebrow">A lanternkeeper's last garden</p>
+      <h1>EMBERWILD</h1>
+      <p class="tagline">The gloom is eating the night garden. You are Luma, the last lanternkeeper.<br>
+      Hold the hedge for <strong>10 waves</strong>, gather light, and fell the Hollow Moth.</p>
+      <p id="title-best" class="best-line">No runs yet — the garden awaits.</p>
+      <div class="button-row">
+        <button type="button" class="btn btn-primary" data-action="start">Light the Lantern — Play</button>
+        <button type="button" class="btn" data-action="howto">How to Play</button>
+        <button type="button" class="btn" data-action="settings">Settings</button>
+      </div>
+      <p class="controls-line">WASD / arrows move &nbsp;·&nbsp; Mouse aims &nbsp;·&nbsp; Hold click to shoot &nbsp;·&nbsp; Space dashes &nbsp;·&nbsp; E unleashes a nova</p>
+    </div>
+  </section>
+
+  <section id="screen-pause" class="screen" aria-hidden="true">
+    <div class="panel-card">
+      <h2>PAUSED</h2>
+      <p>The garden holds its breath.</p>
+      <div class="button-column">
+        <button type="button" class="btn btn-primary" data-action="resume">Resume</button>
+        <button type="button" class="btn" data-action="restart">Restart Run</button>
+        <button type="button" class="btn" data-action="howto">How to Play</button>
+        <button type="button" class="btn" data-action="settings">Settings</button>
+        <button type="button" class="btn" data-action="quit-title">Quit to Title</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-upgrade" class="screen" aria-hidden="true">
+    <div class="upgrade-inner">
+      <p class="eyebrow">The lantern flares brighter</p>
+      <h2 id="upgrade-level-label">Level up — choose a boon</h2>
+      <div id="upgrade-cards" class="upgrade-cards"></div>
+      <p class="controls-line">Click a card, or press 1, 2 or 3. The garden waits while you choose.</p>
+    </div>
+  </section>
+
+  <section id="screen-end" class="screen" aria-hidden="true">
+    <div class="panel-card end-card">
+      <h2 id="end-title">THE GARDEN BLOOMS AGAIN</h2>
+      <p id="end-subtitle">The Hollow Moth is gone. Dawn returns to Emberwild.</p>
+      <p id="end-new-best" class="new-best">★ NEW BEST SCORE ★</p>
+      <div id="end-stats" class="stats-box"></div>
+      <div class="button-column">
+        <button type="button" id="btn-endless" class="btn btn-primary" data-action="endless">Keep Going — Endless Night</button>
+        <button type="button" class="btn btn-primary" data-action="restart">Play Again</button>
+        <button type="button" class="btn" data-action="quit-title">Back to Title</button>
+      </div>
+      <p class="controls-line">Press R or Enter to play again.</p>
+    </div>
+  </section>
+
+  <aside id="panel-howto" class="side-panel" aria-label="How to play">
+    <div class="side-panel-card">
+      <h2>How to Play</h2>
+      <h3>Goal</h3>
+      <p>Survive <strong>10 waves</strong> of gloom creatures and defeat the boss, the Hollow Moth. If your health reaches zero, the run ends.</p>
+      <h3>Controls</h3>
+      <ul>
+        <li><strong>WASD / arrow keys</strong> — move</li>
+        <li><strong>Mouse</strong> — aim</li>
+        <li><strong>Hold left click</strong> (or F) — shoot lantern bolts</li>
+        <li><strong>Space / Shift</strong> — dash (briefly invulnerable)</li>
+        <li><strong>E</strong> — nova blast, clears space around you</li>
+        <li><strong>P / Esc</strong> — pause &nbsp;·&nbsp; <strong>M</strong> — mute</li>
+      </ul>
+      <h3>Getting stronger</h3>
+      <p>Fallen foes drop green <strong>shards</strong>. Collect them to level up and choose one of three boons: more bolts, piercing light, thorns, lifesteal, and more. Kills in quick succession build a <strong>combo multiplier</strong> up to ×4. Elites and the boss drop pickups: hearts, wards, nova stars and lodestones.</p>
+      <h3>Know your foes</h3>
+      <ul>
+        <li><strong>Husk Beetle</strong> — slow and sturdy</li>
+        <li><strong>Thorn Crawler</strong> — fast and fragile</li>
+        <li><strong>Spore Floater</strong> — keeps its distance and shoots</li>
+        <li><strong>Gloom Wisp</strong> — quick, weaving dashes</li>
+        <li><strong>Ember Brute</strong> — telegraphs, then charges</li>
+        <li><strong>The Hollow Moth</strong> — wave 10, two phases, calls wisps</li>
+      </ul>
+      <button type="button" class="btn btn-primary" data-action="close-panel">Got it</button>
+    </div>
+  </aside>
+
+  <aside id="panel-settings" class="side-panel" aria-label="Settings">
+    <div class="side-panel-card">
+      <h2>Settings</h2>
+      <label class="setting-row"><span>Master volume</span><input id="setting-master" type="range" min="0" max="100" step="1"></label>
+      <label class="setting-row"><span>Music volume</span><input id="setting-music" type="range" min="0" max="100" step="1"></label>
+      <label class="setting-row"><span>Sound effects</span><input id="setting-sfx" type="range" min="0" max="100" step="1"></label>
+      <label class="setting-row check"><span>Screen shake</span><input id="setting-shake" type="checkbox"></label>
+      <label class="setting-row check"><span>Auto-fire (always shoot)</span><input id="setting-autofire" type="checkbox"></label>
+      <div class="button-row">
+        <button type="button" class="btn" data-action="mute">Sound: On</button>
+        <button type="button" class="btn btn-primary" data-action="close-panel">Done</button>
+      </div>
+    </div>
+  </aside>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
